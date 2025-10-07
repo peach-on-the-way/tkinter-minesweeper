@@ -1,4 +1,4 @@
-from tkinter import *
+import tkinter as tk
 from tkinter import messagebox
 import random
 
@@ -18,7 +18,7 @@ cell_number_colors = [
 cell_content_bomb = "💣"
 cell_content_flag = "🚩"
 
-class Board(Frame):
+class Board(tk.Frame):
     def __init__(self, master, board_size, mines, cell_size):
         super().__init__(master)
         self.board_size = board_size
@@ -67,7 +67,7 @@ class Board(Frame):
             column = []
             for y in range(self.board_size):
                 # Make button square
-                cell_button_frame = Frame(
+                cell_button_frame = tk.Frame(
                     self,
                     width=self.cell_size,
                     height=self.cell_size
@@ -77,13 +77,13 @@ class Board(Frame):
                 cell_button_frame.grid_rowconfigure(0, weight=1)
                 cell_button_frame.grid(column=x, row=y)
 
-                cell_button = Button(
+                cell_button = tk.Button(
                     cell_button_frame,
                     font=font,
                 )
                 cell_button.configure(command=self.on_cell_left_clicked(x, y))
                 cell_button.bind("<Button-3>", self.on_cell_right_clicked(x, y))
-                cell_button.grid(sticky=NSEW)
+                cell_button.grid(sticky=tk.NSEW)
                 column.append(cell_button_frame)
             self.cell_buttons.append(column)
 
@@ -127,8 +127,8 @@ class Board(Frame):
                     self.reveal_cell(testx, testy)
 
         self.button_at(x, y).config(
-            relief=SUNKEN,
-            state=DISABLED
+            relief=tk.SUNKEN,
+            state=tk.DISABLED,
         )
 
         if type(self.cells_grid_info[x][y]) is int and self.cells_grid_info[x][y] == 0:
@@ -150,7 +150,7 @@ class Board(Frame):
             for y in range(self.board_size):
                 self.show_cell_button(x, y)
                 self.button_at(x, y).config(
-                    state=DISABLED
+                    state=tk.DISABLED
                 )
 
 
@@ -186,12 +186,12 @@ class Board(Frame):
                 or self.exploded:
                 return
             if self.cells_grid_flagged[x][y]:
-                self.button_at(x, y).config(text="", state=NORMAL)
+                self.button_at(x, y).config(text="", state=tk.NORMAL)
                 self.cells_grid_flagged[x][y] = False
                 self.cells_flagged_locations.remove((x, y))
                 self.event_generate("<<CellFlagged>>", x=x, y=y)
             else:
-                self.button_at(x, y).config(text=cell_content_flag, state=DISABLED)
+                self.button_at(x, y).config(text=cell_content_flag, state=tk.DISABLED)
                 self.cells_grid_flagged[x][y] = True
                 self.cells_flagged_locations.add((x, y))
                 self.event_generate("<<CellUnflagged>>", x=x, y=y)
@@ -215,19 +215,19 @@ def reset():
     board.reset()
     board.interaction_enabled = True
 
-root = Tk()
+root = tk.Tk()
 
-top_bar = Frame()
+top_bar = tk.Frame()
 top_bar.grid(column=0, row=0)
 top_bar.grid_columnconfigure(0, weight=1)
 top_bar.grid_columnconfigure(1, weight=1)
 
-mines_left_str = StringVar()
+mines_left_str = tk.StringVar()
 mines_left_str.set("? Mines left")
-mines_left_label = Label(top_bar, textvariable=mines_left_str, font=font)
+mines_left_label = tk.Label(top_bar, textvariable=mines_left_str, font=font)
 mines_left_label.grid(column=0, row=0)
 
-reset_button = Button(top_bar, text="Reset", font=font, command=reset)
+reset_button = tk.Button(top_bar, text="Reset", font=font, command=reset)
 reset_button.grid(column=1, row=0)
 
 board = Board(root, 9, 9, 70)
