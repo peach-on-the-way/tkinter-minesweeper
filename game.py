@@ -84,17 +84,24 @@ class Board(Frame):
                 column.append(cell_button_frame)
             self.cell_buttons.append(column)
 
+    def button_at(self, x, y):
+        if not (0 <= x < self.board_size \
+            and 0 <= y < self.board_size):
+            return None
+
+        return self.cell_buttons[x][y].winfo_children()[0]
+
     def show_cell_button(self, x, y):
         if type(self.cells_grid_info[x][y]) is int and self.cells_grid_info[x][y] == 0:
             pass
         elif type(self.cells_grid_info[x][y]) is int and self.cells_grid_info[x][y] > 0:
-            self.cell_buttons[x][y].config(
+            self.button_at(x, y).config(
                 text=str(self.cells_grid_info[x][y]),
                 disabledforeground=number_colors[self.cells_grid_info[x][y] - 1],
                 foreground=number_colors[self.cells_grid_info[x][y] - 1]
             )
         else:
-            self.cell_buttons[x][y].config(
+            self.button_at(x, y).config(
                 text="💣",
                 disabledforeground="black",
                 foreground="black"
@@ -116,7 +123,7 @@ class Board(Frame):
                     and type(self.cells_grid_info[testx][testy]) is int:
                     self.reveal_cell(testx, testy)
 
-        self.cell_buttons[x][y].config(
+        self.button_at(x, y).config(
             relief=SUNKEN,
             state=DISABLED
         )
@@ -124,12 +131,12 @@ class Board(Frame):
         if type(self.cells_grid_info[x][y]) is int and self.cells_grid_info[x][y] == 0:
             pass
         elif type(self.cells_grid_info[x][y]) is int and self.cells_grid_info[x][y] > 0:
-            self.cell_buttons[x][y].config(
+            self.button_at(x, y).config(
                 text=str(self.cells_grid_info[x][y]),
                 disabledforeground=number_colors[self.cells_grid_info[x][y] - 1]
             )
         else:
-            self.cell_buttons[x][y].config(
+            self.button_at(x, y).config(
                 text="*",
                 disabledforeground="black",
                 background="red"
@@ -139,7 +146,7 @@ class Board(Frame):
         for x in range(self.board_size):
             for y in range(self.board_size):
                 self.show_cell_button(x, y)
-                self.cell_buttons[x][y].config(
+                self.button_at(x, y).config(
                     state=DISABLED
                 )
 
@@ -176,12 +183,12 @@ class Board(Frame):
                 or self.exploded:
                 return
             if self.cells_grid_flagged[x][y]:
-                self.cell_buttons[x][y].config(text="", state=NORMAL)
+                self.button_at(x, y).config(text="", state=NORMAL)
                 self.cells_grid_flagged[x][y] = False
                 self.cells_flagged_locations.remove((x, y))
                 self.event_generate("<<CellFlagged>>", x=x, y=y)
             else:
-                self.cell_buttons[x][y].config(text="🚩", state=DISABLED)
+                self.button_at(x, y).config(text="🚩", state=DISABLED)
                 self.cells_grid_flagged[x][y] = True
                 self.cells_flagged_locations.add((x, y))
                 self.event_generate("<<CellUnflagged>>", x=x, y=y)
