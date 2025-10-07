@@ -4,7 +4,7 @@ import random
 
 font = ("Courier", 20, "bold")
 
-number_colors = [
+cell_number_colors = [
     "blue",
     "green",
     "red",
@@ -97,8 +97,8 @@ class Board(Frame):
         elif type(self.cells_grid_info[x][y]) is int and self.cells_grid_info[x][y] > 0:
             self.button_at(x, y).config(
                 text=str(self.cells_grid_info[x][y]),
-                disabledforeground=number_colors[self.cells_grid_info[x][y] - 1],
-                foreground=number_colors[self.cells_grid_info[x][y] - 1]
+                disabledforeground=cell_number_colors[self.cells_grid_info[x][y] - 1],
+                foreground=cell_number_colors[self.cells_grid_info[x][y] - 1]
             )
         else:
             self.button_at(x, y).config(
@@ -133,7 +133,7 @@ class Board(Frame):
         elif type(self.cells_grid_info[x][y]) is int and self.cells_grid_info[x][y] > 0:
             self.button_at(x, y).config(
                 text=str(self.cells_grid_info[x][y]),
-                disabledforeground=number_colors[self.cells_grid_info[x][y] - 1]
+                disabledforeground=cell_number_colors[self.cells_grid_info[x][y] - 1]
             )
         else:
             self.button_at(x, y).config(
