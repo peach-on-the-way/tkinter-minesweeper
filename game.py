@@ -95,20 +95,29 @@ class Board(tk.Frame):
 
         return self.cell_buttons[x][y].winfo_children()[0]
 
+    def cell_is_empty(self, x, y):
+        return self.cells_grid_info[x][y] == 0
+
+    def cell_is_bomb(self, x, y):
+        return self.cells_grid_info[x][y] == "*"
+
     def show_cell_button(self, x, y):
-        if type(self.cells_grid_info[x][y]) is int and self.cells_grid_info[x][y] == 0:
+        if self.cell_is_empty(x, y):
             pass
-        elif type(self.cells_grid_info[x][y]) is int and self.cells_grid_info[x][y] > 0:
-            self.button_at(x, y).config(
-                text=str(self.cells_grid_info[x][y]),
-                disabledforeground=cell_number_colors[self.cells_grid_info[x][y] - 1],
-                foreground=cell_number_colors[self.cells_grid_info[x][y] - 1]
-            )
-        else:
+        elif self.cell_is_bomb(x, y):
+            color = "black"
             self.button_at(x, y).config(
                 text=cell_content_bomb,
-                disabledforeground="black",
-                foreground="black"
+                disabledforeground=color,
+                foreground=color
+            )
+        else:
+            color = cell_number_colors[self.cells_grid_info[x][y] - 1]
+            content = str(self.cells_grid_info[x][y]) 
+            self.button_at(x, y).config(
+                text=content,
+                disabledforeground=color,
+                foreground=color
             )
 
     def reveal_cell(self, x, y):
@@ -132,18 +141,18 @@ class Board(tk.Frame):
             state=tk.DISABLED,
         )
 
-        if type(self.cells_grid_info[x][y]) is int and self.cells_grid_info[x][y] == 0:
+        if self.cell_is_empty(x, y):
             pass
-        elif type(self.cells_grid_info[x][y]) is int and self.cells_grid_info[x][y] > 0:
-            self.button_at(x, y).config(
-                text=str(self.cells_grid_info[x][y]),
-                disabledforeground=cell_number_colors[self.cells_grid_info[x][y] - 1]
-            )
-        else:
+        elif self.cell_is_bomb(x, y):
             self.button_at(x, y).config(
                 text="*",
                 disabledforeground="black",
                 background="red"
+            )
+        else:
+            self.button_at(x, y).config(
+                text=str(self.cells_grid_info[x][y]),
+                disabledforeground=cell_number_colors[self.cells_grid_info[x][y] - 1]
             )
 
     def reveal_all(self):
@@ -161,7 +170,7 @@ class Board(tk.Frame):
                 return
             while not self.board_generated:
                 self.generate_board()
-                if self.cells_grid_info[x][y] == "*" or self.cells_grid_info[x][y] > 0:
+                if not self.cell_is_empty(x, y):
                     continue
                 else:
                     self.board_generated = True
