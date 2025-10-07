@@ -15,6 +15,9 @@ cell_number_colors = [
     "darkgray",
 ]
 
+cell_content_bomb = "💣"
+cell_content_flag = "🚩"
+
 class Board(Frame):
     def __init__(self, master, board_size, mines, cell_size):
         super().__init__(master)
@@ -102,7 +105,7 @@ class Board(Frame):
             )
         else:
             self.button_at(x, y).config(
-                text="💣",
+                text=cell_content_bomb,
                 disabledforeground="black",
                 foreground="black"
             )
@@ -188,7 +191,7 @@ class Board(Frame):
                 self.cells_flagged_locations.remove((x, y))
                 self.event_generate("<<CellFlagged>>", x=x, y=y)
             else:
-                self.button_at(x, y).config(text="🚩", state=DISABLED)
+                self.button_at(x, y).config(text=cell_content_flag, state=DISABLED)
                 self.cells_grid_flagged[x][y] = True
                 self.cells_flagged_locations.add((x, y))
                 self.event_generate("<<CellUnflagged>>", x=x, y=y)
