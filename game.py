@@ -70,20 +70,21 @@ class Board(tk.Frame):
                 cell_button_frame = tk.Frame(
                     self,
                     width=self.cell_size,
-                    height=self.cell_size
+                    height=self.cell_size,
                 )
                 cell_button_frame.grid_propagate(False) # Prevent the frame from resizing
                 cell_button_frame.grid_columnconfigure(0, weight=1) # Allows the button to fill the frame
                 cell_button_frame.grid_rowconfigure(0, weight=1)
-                cell_button_frame.grid(column=x, row=y)
+                cell_button_frame.grid(column=x, row=y, sticky=tk.NSEW)
 
                 cell_button = tk.Button(
                     cell_button_frame,
                     font=font,
+                    highlightthickness=0,
                 )
                 cell_button.configure(command=self.on_cell_left_clicked(x, y))
                 cell_button.bind("<Button-3>", self.on_cell_right_clicked(x, y))
-                cell_button.grid(sticky=tk.NSEW)
+                cell_button.grid(column=0, row=0, sticky=tk.NSEW)
                 column.append(cell_button_frame)
             self.cell_buttons.append(column)
 
