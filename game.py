@@ -223,6 +223,7 @@ def exploded(args):
 
 def reset():
     board.reset()
+    mines_left_str.set(f"? mines left")
     board.interaction_enabled = True
 
 root = tk.Tk()
