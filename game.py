@@ -63,16 +63,25 @@ class Board(Frame):
         for x in range(self.board_size):
             column = []
             for y in range(self.board_size):
-                cell_button = Button(
+                # Make button square
+                cell_button_frame = Frame(
                     self,
-                    height=self.cell_size,
                     width=self.cell_size,
+                    height=self.cell_size
+                )
+                cell_button_frame.grid_propagate(False) # Prevent the frame from resizing
+                cell_button_frame.grid_columnconfigure(0, weight=1) # Allows the button to fill the frame
+                cell_button_frame.grid_rowconfigure(0, weight=1)
+                cell_button_frame.grid(column=x, row=y)
+
+                cell_button = Button(
+                    cell_button_frame,
                     font=font,
                 )
                 cell_button.configure(command=self.on_cell_left_clicked(x, y))
                 cell_button.bind("<Button-3>", self.on_cell_right_clicked(x, y))
-                cell_button.grid(column=x, row=y)
-                column.append(cell_button)
+                cell_button.grid(sticky=NSEW)
+                column.append(cell_button_frame)
             self.cell_buttons.append(column)
 
     def show_cell_button(self, x, y):
@@ -211,7 +220,7 @@ mines_left_label.grid(column=0, row=0)
 reset_button = Button(top_bar, text="Reset", font=font, command=reset)
 reset_button.grid(column=1, row=0)
 
-board = Board(root, 9, 9, 2)
+board = Board(root, 9, 9, 70)
 board.grid(column=0, row=1)
 
 board.bind("<<BoardGenerated>>", update_mines_left_label)
