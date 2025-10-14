@@ -16,7 +16,9 @@ cell_number_colors = [
 ]
 
 cell_content_bomb = "💣"
+cell_content_bomb_exploded = "💥"
 cell_content_flag = "🚩"
+cell_content_flag_wrong = "❌"
 
 class Board(tk.Frame):
     def __init__(self, master, board_size, mines, cell_size):
