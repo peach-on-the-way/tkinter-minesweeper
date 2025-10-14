@@ -39,6 +39,7 @@ class Board(tk.Frame):
 
     def generate_board(self):
         self.exploded = False
+        self.cells_grid_shown = set()
         self.cells_revealed = set()
         self.cells_flagged_locations = set()
         self.cells_grid_flagged = [[False for i in range(self.board_size)] for i in range(self.board_size)]
@@ -156,10 +157,14 @@ class Board(tk.Frame):
                 text=str(self.cells_grid_info[x][y]),
                 disabledforeground=cell_number_colors[self.cells_grid_info[x][y] - 1]
             )
+        self.cells_grid_shown.add((x, y))
 
     def reveal_all(self):
         for x in range(self.board_size):
             for y in range(self.board_size):
+                if (x, y) in self.cells_grid_shown:
+                    continue
+
                 self.show_cell_button(x, y)
                 self.button_at(x, y).config(
                     state=tk.DISABLED
