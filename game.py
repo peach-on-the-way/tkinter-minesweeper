@@ -148,7 +148,7 @@ class Board(tk.Frame):
             pass
         elif self.cell_is_bomb(x, y):
             self.button_at(x, y).config(
-                text=cell_content_bomb,
+                text=cell_content_bomb_exploded,
                 disabledforeground="black",
                 background="red"
             )
