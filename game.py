@@ -104,24 +104,42 @@ class Board(tk.Frame):
     def cell_is_bomb(self, x, y):
         return self.cells_grid_info[x][y] == "*"
 
+    def cell_is_flagged(self, x, y):
+        return self.cells_grid_flagged[x][y]
+
     def show_cell_button(self, x, y):
         if self.cell_is_empty(x, y):
-            pass
+            if self.cell_is_flagged(x, y):
+                self.button_at(x, y).config(
+                    text=cell_content_flag,
+                )
         elif self.cell_is_bomb(x, y):
-            color = "black"
-            self.button_at(x, y).config(
-                text=cell_content_bomb,
-                disabledforeground=color,
-                foreground=color
-            )
+            if self.cell_is_flagged(x, y):
+                self.button_at(x, y).config(
+                    text=cell_content_flag,
+                )
+            else:
+                color = "black"
+                self.button_at(x, y).config(
+                    text=cell_content_bomb,
+                    disabledforeground=color,
+                    foreground=color
+                )
         else:
-            color = cell_number_colors[self.cells_grid_info[x][y] - 1]
-            content = str(self.cells_grid_info[x][y]) 
-            self.button_at(x, y).config(
-                text=content,
-                disabledforeground=color,
-                foreground=color
-            )
+            if self.cell_is_flagged(x, y):
+                self.button_at(x, y).config(
+                    text=cell_content_flag_wrong,
+                    foreground="red",
+                    disabledforeground="red",
+                )
+            else:
+                color = cell_number_colors[self.cells_grid_info[x][y] - 1]
+                content = str(self.cells_grid_info[x][y]) 
+                self.button_at(x, y).config(
+                    text=content,
+                    disabledforeground=color,
+                    foreground=color
+                )
 
     def reveal_cell(self, x, y):
         if self.cells_grid_revealed[x][y]:
@@ -129,7 +147,7 @@ class Board(tk.Frame):
 
         self.cells_grid_revealed[x][y] = True
         self.cells_revealed.add((x, y))
-        if self.cells_grid_info[x][y] == 0:
+        if self.cell_is_empty(x, y) and not self.cell_is_flagged(x, y):
             dpos = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, -1), (-1, 1), (1, -1)]
             for dx, dy in dpos:
                 testx = x + dx
