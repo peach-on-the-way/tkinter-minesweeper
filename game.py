@@ -206,9 +206,7 @@ class Board(tk.Frame):
                 )
 
     def cell_flag(self, x, y):
-        if not self.board_generated \
-            or self.cells_grid_revealed[x][y] \
-            or self.exploded:
+        if self.cells_grid_revealed[x][y] or self.exploded:
             return
         self.button_at(x, y).config(text=cell_content_flag, state=tk.DISABLED)
         self.cells_grid_flagged[x][y] = True
@@ -216,9 +214,7 @@ class Board(tk.Frame):
         self.event_generate("<<CellFlagged>>", x=x, y=y)
 
     def cell_unflag(self, x, y):
-        if not self.board_generated \
-            or self.cells_grid_revealed[x][y] \
-            or self.exploded:
+        if self.cells_grid_revealed[x][y] or self.exploded:
             return
         self.button_at(x, y).config(text="", state=tk.NORMAL)
         self.cells_grid_flagged[x][y] = False
