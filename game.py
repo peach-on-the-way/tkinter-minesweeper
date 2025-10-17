@@ -37,7 +37,7 @@ class Board(tk.Frame):
         self.board_generated = False
         self.initialize_cell_buttons()
 
-    def generate_board(self):
+    def generate_random_board(self):
         self.exploded = False
         self.cells_grid_shown = set()
         self.cells_revealed = set()
@@ -214,7 +214,7 @@ class Board(tk.Frame):
             if not self.interaction_enabled:
                 return
             while not self.board_generated:
-                self.generate_board()
+                self.generate_random_board()
                 if not self.cell_is_empty(x, y):
                     continue
                 else:
