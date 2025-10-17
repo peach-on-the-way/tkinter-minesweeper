@@ -54,7 +54,9 @@ class Board(tk.Frame):
             mine_y = random.randint(0, self.board_size - 1)
             self.cells_grid_info[mine_x][mine_y] = '*'
             self.mine_locations.add((mine_x, mine_y))
+        self.setup_grid_info()
 
+    def setup_grid_info(self):
         dpos = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, -1), (1, -1), (-1, 1)]
         for x, y in self.mine_locations:
             for dx, dy in dpos:
