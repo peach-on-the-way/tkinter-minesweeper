@@ -286,7 +286,7 @@ top_bar.grid_columnconfigure(0, weight=1)
 top_bar.grid_columnconfigure(1, weight=1)
 
 mines_left_str = tk.StringVar()
-mines_left_str.set("? Mines left")
+mines_left_str.set("? mines left")
 mines_left_label = tk.Label(top_bar, textvariable=mines_left_str, font=font)
 mines_left_label.grid(column=0, row=0)
 
