@@ -73,6 +73,8 @@ class Board(tk.Frame):
         self.initialize_board_data()
         if mine_locations:
             self.mine_locations = set(mine_locations)
+            for x, y in self.mine_locations:
+                self.cells_grid_info[x][y] = '*'
         self.setup_grid_info()
         if cells_to_reveal:
             for pos in cells_to_reveal:
