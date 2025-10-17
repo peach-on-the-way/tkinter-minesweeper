@@ -69,6 +69,18 @@ class Board(tk.Frame):
             self.mine_locations.add((mine_x, mine_y))
         self.setup_grid_info()
 
+    def setup_custom_board(self, mine_locations=None, cells_to_reveal=None, cells_to_flag=None):
+        self.initialize_board_data()
+        if mine_locations:
+            self.mine_locations = set(mine_locations)
+        self.setup_grid_info()
+        if cells_to_reveal:
+            for pos in cells_to_reveal:
+                board.reveal_cell(*pos)
+        if cells_to_flag:
+            for pos in cells_to_flag:
+                board.cell_flag(*pos)
+
     def initialize_cell_buttons(self):
         self.cell_buttons = []
         for x in range(self.board_size):
