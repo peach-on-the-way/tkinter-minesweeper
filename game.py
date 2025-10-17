@@ -188,6 +188,26 @@ class Board(tk.Frame):
                     state=tk.DISABLED
                 )
 
+    def cell_flag(self, x, y):
+        if not self.board_generated \
+            or self.cells_grid_revealed[x][y] \
+            or self.exploded:
+            return
+        self.button_at(x, y).config(text=cell_content_flag, state=tk.DISABLED)
+        self.cells_grid_flagged[x][y] = True
+        self.cells_flagged_locations.add((x, y))
+        self.event_generate("<<CellFlagged>>", x=x, y=y)
+
+    def cell_unflag(self, x, y):
+        if not self.board_generated \
+            or self.cells_grid_revealed[x][y] \
+            or self.exploded:
+            return
+        self.button_at(x, y).config(text="", state=tk.NORMAL)
+        self.cells_grid_flagged[x][y] = False
+        self.cells_flagged_locations.remove((x, y))
+        self.event_generate("<<CellUnflagged>>", x=x, y=y)
+
 
     def on_cell_left_clicked(self, x, y):
         def on_cell_left_clicked_inner():
@@ -221,15 +241,9 @@ class Board(tk.Frame):
                 or self.exploded:
                 return
             if self.cells_grid_flagged[x][y]:
-                self.button_at(x, y).config(text="", state=tk.NORMAL)
-                self.cells_grid_flagged[x][y] = False
-                self.cells_flagged_locations.remove((x, y))
-                self.event_generate("<<CellFlagged>>", x=x, y=y)
+                self.cell_unflag(x, y)
             else:
-                self.button_at(x, y).config(text=cell_content_flag, state=tk.DISABLED)
-                self.cells_grid_flagged[x][y] = True
-                self.cells_flagged_locations.add((x, y))
-                self.event_generate("<<CellUnflagged>>", x=x, y=y)
+                self.cell_flag(x, y)
         return on_cell_right_clicked_inner
 
 
