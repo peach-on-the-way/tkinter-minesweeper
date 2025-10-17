@@ -39,11 +39,9 @@ class Board(tk.Frame):
 
     def initialize_board_data(self):
         self.exploded = False
-        self.cells_grid_shown = set()
         self.cells_revealed = set()
         self.cells_flagged_locations = set()
         self.cells_grid_flagged = [[False for i in range(self.board_size)] for i in range(self.board_size)]
-        self.cells_grid_revealed = [[False for i in range(self.board_size)] for i in range(self.board_size)]
         self.cells_grid_info = [[0 for i in range(self.board_size)] for i in range(self.board_size)]
         self.mine_locations = set()
 
@@ -161,10 +159,9 @@ class Board(tk.Frame):
                 )
 
     def reveal_cell(self, x, y):
-        if self.cells_grid_revealed[x][y]:
+        if (x, y) in self.cells_revealed:
             return
 
-        self.cells_grid_revealed[x][y] = True
         self.cells_revealed.add((x, y))
         if self.cell_is_empty(x, y) and not self.cell_is_flagged(x, y):
             dpos = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, -1), (-1, 1), (1, -1)]
@@ -194,12 +191,12 @@ class Board(tk.Frame):
                 text=str(self.cells_grid_info[x][y]),
                 disabledforeground=cell_number_colors[self.cells_grid_info[x][y] - 1]
             )
-        self.cells_grid_shown.add((x, y))
+        self.cells_revealed.add((x, y))
 
     def reveal_all(self):
         for x in range(self.board_size):
             for y in range(self.board_size):
-                if (x, y) in self.cells_grid_shown:
+                if (x, y) in self.cells_revealed:
                     continue
 
                 self.show_cell_button(x, y)
@@ -208,7 +205,7 @@ class Board(tk.Frame):
                 )
 
     def cell_flag(self, x, y):
-        if self.cells_grid_revealed[x][y] or self.exploded:
+        if (x, y) in self.cells_revealed or self.exploded:
             return
         self.button_at(x, y).config(text=cell_content_flag, state=tk.DISABLED)
         self.cells_grid_flagged[x][y] = True
@@ -216,7 +213,7 @@ class Board(tk.Frame):
         self.event_generate("<<CellFlagged>>", x=x, y=y)
 
     def cell_unflag(self, x, y):
-        if self.cells_grid_revealed[x][y] or self.exploded:
+        if (x, y) in self.cells_revealed or self.exploded:
             return
         self.button_at(x, y).config(text="", state=tk.NORMAL)
         self.cells_grid_flagged[x][y] = False
@@ -252,7 +249,7 @@ class Board(tk.Frame):
             if not self.interaction_enabled:
                 return
             if not self.board_generated \
-                or self.cells_grid_revealed[x][y] \
+                or (x, y) in self.cells_revealed \
                 or self.exploded:
                 return
             if self.cells_grid_flagged[x][y]:
