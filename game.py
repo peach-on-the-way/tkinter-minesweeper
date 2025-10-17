@@ -37,7 +37,7 @@ class Board(tk.Frame):
         self.board_generated = False
         self.initialize_cell_buttons()
 
-    def generate_random_board(self):
+    def initialize_board_data(self):
         self.exploded = False
         self.cells_grid_shown = set()
         self.cells_revealed = set()
@@ -46,6 +46,9 @@ class Board(tk.Frame):
         self.cells_grid_revealed = [[False for i in range(self.board_size)] for i in range(self.board_size)]
         self.cells_grid_info = [[0 for i in range(self.board_size)] for i in range(self.board_size)]
         self.mine_locations = set()
+
+    def generate_random_board(self):
+        self.initialize_board_data()
         for _ in range(self.mines):
             mine_x = random.randint(0, self.board_size - 1)
             mine_y = random.randint(0, self.board_size - 1)
