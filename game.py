@@ -115,6 +115,9 @@ class Board(tk.Frame):
 
         return self.cell_buttons[x][y].winfo_children()[0]
 
+    def pos_inside_board(self, x, y):
+        return 0 <= x < self.board_size and 0 <= y < self.board_size
+
     def cell_is_revealed(self, x, y):
         return (x, y) in self.cells_revealed
 
