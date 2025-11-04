@@ -115,6 +115,9 @@ class Board(tk.Frame):
 
         return self.cell_buttons[x][y].winfo_children()[0]
 
+    def cell_is_revealed(self, x, y):
+        return (x, y) in self.cells_revealed
+
     def cell_is_empty(self, x, y):
         return self.cells_grid_info[x][y] == 0
 
