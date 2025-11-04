@@ -118,6 +118,9 @@ class Board(tk.Frame):
     def cell_is_empty(self, x, y):
         return self.cells_grid_info[x][y] == 0
 
+    def cell_is_number(self, x, y):
+        return 1 >= self.cells_grid_info[x][y] >= 8
+
     def cell_is_bomb(self, x, y):
         return self.cells_grid_info[x][y] == "*"
 
