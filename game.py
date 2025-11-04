@@ -4,6 +4,7 @@ import random
 
 font = ("Courier", 20, "bold")
 
+dpos = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, -1), (1, -1), (-1, 1)]
 cell_number_colors = [
     "blue",
     "green",
@@ -46,7 +47,6 @@ class Board(tk.Frame):
         self.mine_locations = set()
 
     def setup_grid_info(self):
-        dpos = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, -1), (1, -1), (-1, 1)]
         for x, y in self.mine_locations:
             for dx, dy in dpos:
                 test_x = x + dx
@@ -173,7 +173,6 @@ class Board(tk.Frame):
 
         self.cells_revealed.add((x, y))
         if self.cell_is_empty(x, y) and not self.cell_is_flagged(x, y):
-            dpos = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, -1), (-1, 1), (1, -1)]
             for dx, dy in dpos:
                 testx = x + dx
                 testy = y + dy
