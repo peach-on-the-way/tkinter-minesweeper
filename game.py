@@ -175,6 +175,7 @@ class Board(tk.Frame):
         if (x, y) in self.cells_revealed:
             return
 
+        self.cells_unrevealed.remove((x, y))
         self.cells_revealed.add((x, y))
         if self.cell_is_empty(x, y) and not self.cell_is_flagged(x, y):
             for dx, dy in dpos:
