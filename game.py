@@ -264,14 +264,18 @@ class Board(tk.Frame):
         def on_cell_left_clicked_inner():
             if not self.interaction_enabled:
                 return
+
+            # Attempts til giving up generating good start
+            attempts = 1000
             while not self.board_generated:
                 self.generate_random_board()
-                if not self.cell_is_empty(x, y):
+                attempts -= 1
+                if not self.cell_is_empty(x, y) and attempts > 0:
                     continue
-                else:
-                    self.board_generated = True
-                    self.event_generate("<<BoardGenerated>>")
-                    break
+                self.board_generated = True
+                self.event_generate("<<BoardGenerated>>")
+                break
+
             if self.cells_grid_info[x][y] == "*":
                 self.reveal_cell(x, y)
                 self.reveal_all()
