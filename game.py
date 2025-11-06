@@ -126,7 +126,10 @@ class Board(tk.Frame):
         return self.cells_grid_info[x][y] == 0
 
     def cell_is_number(self, x, y):
-        return 1 >= self.cells_grid_info[x][y] >= 8
+        val = self.cells_grid_info[x][y]
+        if not isinstance(val, int):
+            return False
+        return 1 >= val >= 8
 
     def cell_is_bomb(self, x, y):
         return self.cells_grid_info[x][y] == "*"
