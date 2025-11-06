@@ -257,7 +257,7 @@ class Board(tk.Frame):
         self.button_at(x, y).config(text="", state=tk.NORMAL)
         self.cells_grid_flagged[x][y] = False
         self.cells_flagged_locations.remove((x, y))
-        self.event_generate("<<CellUnflagged>>", x=x, y=y)
+        self.event_generate("<<CellUnflagged>>")
 
 
     def on_cell_left_clicked(self, x, y):
@@ -279,11 +279,11 @@ class Board(tk.Frame):
             if self.cells_grid_info[x][y] == "*":
                 self.reveal_cell(x, y)
                 self.reveal_all()
-                self.event_generate("<<CellExploded>>", x=x, y=y)
+                self.event_generate("<<CellExploded>>")
                 self.exploded = True
             else: 
                 self.reveal_cell(x, y)
-                self.event_generate("<<CellRevealed>>", x=x, y=y)
+                self.event_generate("<<CellRevealed>>")
 
         return on_cell_left_clicked_inner
 
