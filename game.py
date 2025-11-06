@@ -44,6 +44,7 @@ class Board(tk.Frame):
         self.cells_flagged_locations = set()
         self.cells_grid_flagged = [[False for i in range(self.board_size)] for i in range(self.board_size)]
         self.cells_grid_info = [[0 for i in range(self.board_size)] for i in range(self.board_size)]
+        self.cells_unrevealed = { (x, y) for x in range(self.board_size) for y in range(self.board_size)}
         self.mine_locations = set()
 
     def setup_grid_info(self):
