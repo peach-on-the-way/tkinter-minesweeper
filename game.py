@@ -5,6 +5,7 @@ import solver
 import time
 
 font = ("Courier", 20, "bold")
+small_font = ("Courier", 10, "bold")
 
 dpos = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, -1), (1, -1), (-1, 1)]
 cell_number_colors = [
@@ -317,10 +318,38 @@ def check_board_completed(args):
 def exploded(args):
     messagebox.showwarning("Game over", "You activated a mine...")
 
+# def test_board(board):
+#     board.board_size = 6
+#     board.reset()
+#     mine_locations = [(3,1),(3,4),(4,2),(5,3)]
+#     cells_to_reveal = [(0, 0)]
+#     cells_to_flag = []
+#     board.setup_custom_board(mine_locations, cells_to_reveal, cells_to_flag)
+#     board.board_generated = True
+
 def reset():
+    # board.reset()
+    # test_board(board)
+    # mines_left_str.set(f"? mines left")
+    # board.interaction_enabled = True
+
+    try:
+        board.board_size = int(board_size_var.get())
+        board.mines = int(mines_var.get())
+    except:
+        pass
     board.reset()
     mines_left_str.set(f"? mines left")
     board.interaction_enabled = True
+
+def tksleep(t):
+    'emulating time.sleep(seconds)'
+    ms = int(t*1000)
+    root = tk._get_default_root()
+    var = tk.IntVar(root)
+    root.after(ms, lambda: var.set(1))
+    root.wait_variable(var)
+
 
 def solve_once():
     if not board.board_generated or board.exploded:
@@ -331,10 +360,14 @@ def solve_once():
         print("Cannot solve")
         return
 
+    # Nice animation
+    delay = 0.005
     for cell, is_mine in result.items():
         if not board.board_generated or board.exploded:
             break
 
+        if enable_delay.get():
+            tksleep(delay)
         x, y = cell
         if is_mine:
             board.cell_flag_without_event(x, y)
@@ -359,7 +392,10 @@ def solve_all():
         if not board.board_generated or board.exploded:
             return
         
+        delay = 0.005
         for cell, is_mine in result.items():
+            if enable_delay.get():
+                tksleep(delay)
             x, y = cell
             if is_mine:
                 board.cell_flag_without_event(x, y)
@@ -374,6 +410,14 @@ def solve_all():
             board.event_generate("<<CellExploded>>")
         board.event_generate("<<CellFlagged>>")
 
+def toggle_solver_delay():
+    if enable_delay.get():
+        enable_delay.set(False)
+        toggle_delay_text.set("Delay Disabled")
+    else:
+        enable_delay.set(True)
+        toggle_delay_text.set("Delay Enabled")
+
 # Preemptively load caches for common cases
 for neighbors_count in range(1, 8):
     for mines_count in range(1, neighbors_count + 1):
@@ -382,20 +426,87 @@ for neighbors_count in range(1, 8):
 root = tk.Tk()
 
 top_bar = tk.Frame()
-top_bar.grid(column=0, row=0)
+top_bar.grid(column=0, row=0, ipadx=50)
 top_bar.grid_columnconfigure(0, weight=1)
 top_bar.grid_columnconfigure(1, weight=1)
 
+gameplay_ui = tk.Frame(top_bar)
+gameplay_ui.grid(column=0, row=0)
+gameplay_ui.grid_rowconfigure(0, weight=1)
+gameplay_ui.grid_rowconfigure(1, weight=1)
+
 mines_left_str = tk.StringVar()
 mines_left_str.set("? mines left")
-mines_left_label = tk.Label(top_bar, textvariable=mines_left_str, font=font)
-mines_left_label.grid(column=0, row=0)
+mines_left_label = tk.Label(gameplay_ui, textvariable=mines_left_str, font=font)
+mines_left_label.grid(column=2, row=0)
 
-reset_button = tk.Button(top_bar, text="Reset", font=font, command=reset)
-reset_button.grid(column=1, row=0)
+reset_button = tk.Button(gameplay_ui, text="Reset", font=font, command=reset)
+reset_button.grid(column=2, row=1)
 
-board = Board(root, 9, 9, 70)
+def board_size_entry_on_invalid():
+    board_size_entry.delete(0, "end")
+    board_size_entry.insert(0, board.board_size)
+
+board_size_var = tk.StringVar()
+board_size_var.set(10)
+board_size_entry = tk.Entry(
+    gameplay_ui,
+    textvariable=board_size_var,
+    font=small_font,
+    validate="focusout",
+    validatecommand=(
+        root.register(lambda v: v.isdigit()),
+        "%P"
+    ),
+    invalidcommand=board_size_entry_on_invalid
+)
+board_size_entry.grid(column=1, row=0, padx=(0, 20))
+size_label = tk.Label(gameplay_ui, text="Size", font=small_font)
+size_label.grid(column=0, row=0)
+
+def mines_entry_on_invalid():
+    mines_entry.delete(0, "end")
+    mines_entry.insert(0, str(board.mines))
+
+mines_var = tk.StringVar()
+mines_entry = tk.Entry(
+    gameplay_ui,
+    textvariable=mines_var,
+    font=small_font,
+    validate="focusout",
+    validatecommand=(
+        root.register(lambda v: v.isdigit() and int(v) < int(board_size_var.get()) * int(board_size_var.get())),
+        "%P"
+    ),
+    invalidcommand=mines_entry_on_invalid,
+)
+mines_entry.insert(0, "10")
+mines_entry.grid(column=1, row=1, padx=(0, 20))
+mines_label = tk.Label(gameplay_ui, text="Mines", font=small_font)
+mines_label.grid(column=0, row=1)
+
+solver_ui = tk.Frame(top_bar)
+solver_ui.grid(column=1, row=0)
+solver_ui.grid_rowconfigure(0, weight=1)
+solver_ui.grid_rowconfigure(1, weight=1)
+
+solve_once_button = tk.Button(solver_ui, text="Solve Once", font=font, command=solve_once)
+solve_once_button.grid(column=0, row=0)
+
+solve_all_button = tk.Button(solver_ui, text="Solve all", font=font, command=solve_all)
+solve_all_button.grid(column=1, row=0)
+
+toggle_delay_text = tk.StringVar()
+toggle_delay_text.set("Delay Enabled")
+enable_delay = tk.BooleanVar()
+enable_delay.set(True)
+delay_button = tk.Button(solver_ui, textvariable=toggle_delay_text, font=font, command=toggle_solver_delay)
+delay_button.grid(column=0, row=1, columnspan=2)
+
+board = Board(root, 10, 10, 30)
 board.grid(column=0, row=1)
+
+# test_board(board)
 
 board.bind("<<BoardGenerated>>", update_mines_left_label)
 board.bind("<<CellFlagged>>", update_mines_left_label)
