@@ -217,13 +217,17 @@ class Board(tk.Frame):
                     state=tk.DISABLED
                 )
 
-    def cell_flag(self, x, y):
+    def cell_flag_without_event(self, x, y):
         if (x, y) in self.cells_revealed or self.exploded:
             return
         self.button_at(x, y).config(text=cell_content_flag, state=tk.DISABLED)
         self.cells_grid_flagged[x][y] = True
         self.cells_flagged_locations.add((x, y))
-        self.event_generate("<<CellFlagged>>", x=x, y=y)
+        
+
+    def cell_flag(self, x, y):
+        self.cell_flag_without_event(x, y)
+        self.event_generate("<<CellFlagged>>")
 
     def cell_unflag(self, x, y):
         if (x, y) in self.cells_revealed or self.exploded:
