@@ -105,7 +105,7 @@ def generate(cell_count, mines_count):
 from concurrent.futures import ProcessPoolExecutor
 
 with ProcessPoolExecutor(max_workers=16) as e:
-    for cell_count in range(1, 12):
-        for mines_count in range(1, cell_count + 1):
+    for cell_count in range(1, 13):
+        for mines_count in range(0, cell_count + 1):
             e.submit(generate, cell_count, mines_count)
 
