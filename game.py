@@ -321,7 +321,7 @@ def exploded(args):
 # def test_board(board):
 #     board.board_size = 6
 #     board.reset()
-#     mine_locations = [(3,1),(3,4),(4,2),(5,3)]
+#     mine_locations = [(5,4), (4,5), (4, 4)]
 #     cells_to_reveal = [(0, 0)]
 #     cells_to_flag = []
 #     board.setup_custom_board(mine_locations, cells_to_reveal, cells_to_flag)
