@@ -217,6 +217,28 @@ class Board(tk.Frame):
                     state=tk.DISABLED
                 )
 
+    def find_number_cells_adjacent_to_unrevealed_cell(self):
+        cells = set()
+        for mine_x, mine_y in self.mine_locations:
+            for dx, dy in dpos:
+                testx = mine_x + dx
+                testy = mine_y + dy
+                if not self.pos_inside_board(testx, testy) \
+                    or not self.cell_is_revealed(testx, testy) \
+                    or (testx, testy) in self.mine_locations:
+                    continue
+
+                number_cell_x, number_cell_y = testx, testy
+                for dx, dy in dpos:
+                    testx = number_cell_x + dx
+                    testy = number_cell_y + dy
+                    if not self.cell_is_revealed(testx, testy):
+                        continue
+                    cells.add((number_cell_x, number_cell_y))
+                    break
+        return cells
+
+
     def cell_flag_without_event(self, x, y):
         if (x, y) in self.cells_revealed or self.exploded:
             return
