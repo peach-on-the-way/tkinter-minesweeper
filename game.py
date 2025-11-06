@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox
 import random
+import solver
+import time
 
 font = ("Courier", 20, "bold")
 
@@ -319,6 +321,63 @@ def reset():
     board.reset()
     mines_left_str.set(f"? mines left")
     board.interaction_enabled = True
+
+def solve_once():
+    if not board.board_generated or board.exploded:
+        return
+    
+    result = solver.solve_once(board)
+    if result == None:
+        print("Cannot solve")
+        return
+
+    for cell, is_mine in result.items():
+        if not board.board_generated or board.exploded:
+            break
+
+        x, y = cell
+        if is_mine:
+            board.cell_flag_without_event(x, y)
+        else:
+            if not board.exploded:
+                board.reveal_cell(x, y)
+            if board.cells_grid_info[x][y] == "*":
+                board.reveal_all()
+                board.exploded = True
+                break
+
+    if board.exploded:
+        board.event_generate("<<CellExploded>>")
+    board.event_generate("<<CellFlagged>>")
+
+def solve_all():
+    while True:
+        result = solver.solve_once(board)
+        if result == None:
+            print("Solve all finished")
+            return
+        if not board.board_generated or board.exploded:
+            return
+        
+        for cell, is_mine in result.items():
+            x, y = cell
+            if is_mine:
+                board.cell_flag_without_event(x, y)
+            else:
+                if not board.exploded:
+                    board.reveal_cell(x, y)
+                if board.cells_grid_info[x][y] == "*":
+                    board.reveal_all()
+                    board.exploded = True
+
+        if board.exploded:
+            board.event_generate("<<CellExploded>>")
+        board.event_generate("<<CellFlagged>>")
+
+# Preemptively load caches for common cases
+for neighbors_count in range(1, 8):
+    for mines_count in range(1, neighbors_count + 1):
+        solver.load_cache(neighbors_count, mines_count)
 
 root = tk.Tk()
 
