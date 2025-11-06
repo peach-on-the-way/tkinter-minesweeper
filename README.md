@@ -12,7 +12,7 @@ Run the game by `python game.py`
 - Change board size by the `Size` text input field. The board is always a square.
 - Change amount of mines by the `Mines` text input field. The board is not guaranteed to generate that amount of mines you've inputted but it will try.
 - If you want to regenerate your board, click the `Reset` button.
-- Use the `Solve Once` button to solve the board as much as possible within a single iteration
+- Use the `Solve Once` button to solve the board as much as possible within a single iteration. If nothing changes, it means that the solver gives up.
 - Use the `Solve All` button to keep solving until it no longer can solve or the board is done.
 - Delay toggle button is used to introduce artificial delay for the solver for extra excitement.
 
